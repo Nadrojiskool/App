@@ -4,8 +4,9 @@ import { Footer } from './footer';
 import { MainNavbar } from './main-navbar';
 const MainLayoutRoot = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
-    height: '100%',
-    paddingTop: 64
+    width: '100vw',
+    height: '100vh',
+    border: '1px solid green'
 }));
 
 export const MainLayout = (props) => {
@@ -14,7 +15,7 @@ export const MainLayout = (props) => {
     return (
         <MainLayoutRoot>
             <MainNavbar />
-                {children}
+            { children }
             <Footer />
         </MainLayoutRoot>
       );

@@ -74,29 +74,29 @@ export const theme = createTheme({
         '*': {
           boxSizing: 'border-box',
           margin: 0,
-          padding: 0
+          padding: 0,
         },
         html: {
           MozOsxFontSmoothing: 'grayscale',
           WebkitFontSmoothing: 'antialiased',
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '100%',
-          width: '100%'
+          height: '100vh',
+          width: '100vw'
         },
         body: {
           display: 'flex',
           flex: '1 1 auto',
           flexDirection: 'column',
-          minHeight: '100%',
-          width: '100%'
+          height: '100vh',
+          width: '100vw'
         },
         '#__next': {
           display: 'flex',
           flex: '1 1 auto',
           flexDirection: 'column',
-          height: '100%',
-          width: '100%'
+          height: '100vh',
+          width: '100vw'
         }
       }
     },
