@@ -3,20 +3,13 @@ import { useRouter } from 'next/router';
 import Script from 'next/script'
 import { useEffect, useRef, useState } from 'react';
 import { Box, Divider } from '@mui/material';
-import { useAuthContext } from '../contexts/auth-context';
-import { MainLayout } from '../components/main-layout';
-import { HomeHero } from '../components/home/home-hero';
-import { HomeHandcash } from '../components/home/home-handcash';
-import { HomeDurodogs } from '../components/home/home-durodogs';
-import { Stage } from '@pixi/react';
-import { sleep } from 'src/utils/wait';
-import jsQR from 'jsqr';
 
-let loaded = false;
-var video;
-var snap;
 const snapInterval = 200;
-var snapIntervalId;
+let javascriptBarcodeReader;
+let loaded = false;
+let video;
+let snap;
+let snapIntervalId;
 
 const Page = () => {
   const [found, setFound] = useState(false);
@@ -64,7 +57,7 @@ const Page = () => {
       ctx.drawImage(video, 0, 0, width, height);
       const imageData = ctx.getImageData(0, 0, width, height);
       
-      javascriptBarcodeReader({
+      if (javascriptBarcodeReader) javascriptBarcodeReader({
         // Image file Path || {data: Uint8ClampedArray, width, height} || HTML5 Canvas ImageData
         image: imageData,
         barcode: 'ean-13',
