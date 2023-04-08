@@ -18,41 +18,6 @@ var snap;
 const snapInterval = 200;
 var snapIntervalId;
 
-const getCamera = async () => {
- 
-  if (!navigator.mediaDevices) {
-      throw new Error("mediaDevices API unavailable.");
-  }
-
-  const devices = await navigator.mediaDevices.enumerateDevices();
-  const cameras = devices.filter(d => (d.kind === "videoinput"));
-  return cameras[0];
-
-};
-
-// const qrWorker = (typeof window !== 'undefined') ? new Worker("./workers/qr-worker.js") : undefined;
- 
-/*
-qrWorker.addEventListener("message", ({data}) => {
- 
-    if (data) {
-        // Data from QR code available 
-        // 
-        // Handle a successful scan here.
-    }
-    else {
-        // No QR code detected in this frame
-        // 
-        // Feed the next frame to the QR worker 
-        // now (this code is introduced below).
-        //tick();     
-    }
- 
-});
-*/
-
-//const tick = () => requestAnimationFrame(updateJsQr);
-
 const Page = () => {
   const [found, setFound] = useState(false);
   const videoRef = useRef(null);
@@ -87,6 +52,8 @@ const Page = () => {
     let video = videoRef.current;
     let photo = photoRef.current;
     let ctx = photo.getContext("2d");
+    const found1 = new Set();
+    const found2 = new Set();
 
     const width = 320;
     const height = 240;
@@ -96,12 +63,34 @@ const Page = () => {
     return setInterval(() => {
       ctx.drawImage(video, 0, 0, width, height);
       const imageData = ctx.getImageData(0, 0, width, height);
-      const code = jsQR(imageData.data, width, height);
-
-      if (code) {
-        console.log("Found QR code", code);
-        setFound(true);
-      }
+      
+      javascriptBarcodeReader({
+        // Image file Path || {data: Uint8ClampedArray, width, height} || HTML5 Canvas ImageData
+        image: imageData,
+        barcode: 'ean-13',
+        // barcodeType: 'industrial',
+        options: {    
+          // useAdaptiveThreshold: true // for images with sahded portions
+          // singlePass: true
+        }
+      })
+        .then(code => { 
+          if (code && code.length === 12) { 
+            if (!found1.has(code)) {
+              found1.add(code)
+              console.log("Found barcode 1", code);
+            }
+            else if (!found2.has(code)) {
+              found2.add(code)
+              console.log("Found barcode 2", code);
+            }
+            else {
+              console.log("Found barcode 3", code);
+              setFound(true);
+            }
+          }
+        })
+        .catch(err => { console.log(err) })
     }, snapInterval);
   };
 
@@ -115,6 +104,7 @@ const Page = () => {
 
   return (
     <>
+      <Script src="https://www.unpkg.com/javascript-barcode-reader" />
       <Head>
         <title>
           NFT Sample App | Asset Layer
