@@ -6,12 +6,15 @@ import { Box, Divider } from '@mui/material';
 import { useZxing } from "react-zxing";
 
 export const BarcodeScanner = () => {
-  const [result, setResult] = useState("");
+  const [code, setCode] = useState('');
   const { ref } = useZxing({
     onResult(result) {
       const text = result.getText();
       console.log('result', text);
-      // setResult(text);
+      if (!result || text !== code) {
+        setCode(text);
+        alert(text);
+      }
     },
   });
 
@@ -22,7 +25,6 @@ const Page = () => {
 
   return (
     <>
-      <Script src="https://www.unpkg.com/javascript-barcode-reader" />
       <Head>
         <title>
           NFT Sample App | Asset Layer
