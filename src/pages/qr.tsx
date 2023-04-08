@@ -53,6 +53,7 @@ qrWorker.addEventListener("message", ({data}) => {
 //const tick = () => requestAnimationFrame(updateJsQr);
 
 const Page = () => {
+  const [found, setFound] = useState(false);
   const videoRef = useRef(null);
   const photoRef = useRef(null);
 
@@ -140,6 +141,7 @@ const Page = () => {
 
       if (code) {
         console.log("Found QR code", code);
+        setFound(true);
       }
     }, snapInterval);
   };
@@ -160,7 +162,7 @@ const Page = () => {
         </title>
       </Head>
       <main>
-        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100vw', height: '100vh' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100vw', height: '100vh', border: (found) ? '3px solid red' : 'none' }}>
           <video ref={videoRef} autoPlay muted/>
           <canvas ref={photoRef} style={{ position: 'absolute', display: 'none' }}/>
         </Box>
