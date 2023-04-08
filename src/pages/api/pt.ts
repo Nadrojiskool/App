@@ -1,6 +1,7 @@
 import { CustomError } from "src/types/error";
 import { parseBasicError } from "./validate";
-import puppeteer from "puppeteer";
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 
 
 
@@ -26,8 +27,10 @@ export default function getPuppeteerEndpoint(req:any, res:any) {
 
 export async function getEndpoint() {
     const browser = await puppeteer.launch({
-      headless: true,
-      defaultViewport: null,
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: chromium.headless,
     });
     const page = await browser.newPage();
     const url = 'https://www.cgccards.com/certlookup/3991441013/'
@@ -45,7 +48,6 @@ export async function getEndpoint() {
         const final = formatted.substring(1, formatted.length - 1);
         const [key, value] = final.split('_');
         details[key] = value;
-        console.log('formatted', formatted);
     }
     
     return details;
