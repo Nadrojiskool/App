@@ -62,21 +62,20 @@ export const ScannerDialog = ({ add, close }) => {
 
 export const ScannedItemRow = ({ item }) => {
   const [expanded, setExpanded] = useState(false);
-  const [key, value] = item;
 
-  function expand() { if (value) setExpanded(true); }
+  function expand() { if (item[1]) setExpanded(true); }
   function collapse() { setExpanded(false); }
 
-  return <Stack spacing='1rem' onClick={(expanded) ? collapse : expand} sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-    { value && <Typography sx={{ py: '0.25rem' }}>{ value['Card Name'] }</Typography> }
-    <Typography sx={{ py: '0.25rem' }}>{ key }</Typography>
+  return <Stack spacing='1rem' onClick={(expanded) ? collapse : expand} sx={{ display: 'flex', alignItems: 'center', width: '100%', maxWidth: '100vw', background: 'lightgray', borderRadius: 4 }}>
+    { item[1] && <Typography sx={{ py: '0.25rem' }}>{ item[1]['Card Name'] }</Typography> }
+    <Typography sx={{ py: '0.25rem' }}>{ item[0] }</Typography>
     { expanded && <Stack>
-      <Stack direction="row">
-        <Typography sx={{ py: '0.25rem' }}>{ value['Game'] }</Typography>
-        <Typography sx={{ py: '0.25rem' }}>{ value['Card Set'] }</Typography>
-        <Typography sx={{ py: '0.25rem' }}>{ value['Card Number'] }</Typography>
+      <Stack direction="row" sx={{ py: '0.25rem' }}>
+        <Typography>{ item[1]['Game'] }</Typography>
+        <Typography>{ item[1]['Card Set'] }</Typography>
+        <Typography>{ item[1]['Card Number'] }</Typography>
       </Stack>
-      <Typography variant="h4" sx={{ py: '0.25rem' }}>{ value['Grade'] }</Typography>
+      <Typography variant="h4" sx={{ py: '0.25rem' }}>{ item[1]['Grade'] }</Typography>
     </Stack> }
   </Stack>
 };
