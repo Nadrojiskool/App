@@ -9,7 +9,7 @@ import { BasicDialog } from 'src/widgets/basic/basic-dialog';
 
 let loaded = false;
 const isBrowser = (typeof window !== "undefined");
-const sharedLoadedItems = new Map();
+const sharedScannedItems = new Map();
 
 /*
 const getQuotes = async () => {
@@ -95,16 +95,16 @@ const Page = () => {
   function closeScannerDialog() { setScannerOpen(false); }
 
   async function getDetails(code:string) {
-    if (sharedLoadedItems.has(code)) return;
+    if (sharedScannedItems.has(code)) return;
 
     try {
-      sharedLoadedItems.set(code, undefined);
-      setScannedItems(new Map(sharedLoadedItems));
+      sharedScannedItems.set(code, undefined);
+      setScannedItems(new Map(sharedScannedItems));
       const { data: details } = await axios.post(`/api/pt`, { code });
 
       console.log('got details', details);
-      sharedLoadedItems.set(code, details);
-      setScannedItems(new Map(sharedLoadedItems));
+      sharedScannedItems.set(code, details);
+      setScannedItems(new Map(sharedScannedItems));
     }
     catch (e) {
       console.warn('puppeteer error', e);
