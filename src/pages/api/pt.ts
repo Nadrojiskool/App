@@ -35,6 +35,7 @@ export default function getCodeData(req:NextApiRequest, res:NextApiResponse) {
 }
 
 export async function parseCodeData(code: string) {
+    // code = 'https://www.cgccards.com/certlookup/3991441013'
     isUrl.safeParse(code);
     const splitUrl = code.split('/');
     let cert = '';

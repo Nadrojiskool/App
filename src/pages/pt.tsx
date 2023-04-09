@@ -66,22 +66,22 @@ export const ScannedItemRow = ({ item }) => {
   function expand() { if (item[1]) setExpanded(true); }
   function collapse() { setExpanded(false); }
 
-  return <Stack spacing='1rem' onClick={(expanded) ? collapse : expand} sx={{ display: 'flex', alignItems: 'center', width: '100%', maxWidth: '100vw', background: 'lightgray', borderRadius: 4 }}>
-    { item[1] && <Typography sx={{ py: '0.25rem' }}>{ item[1]['Card Name'] }</Typography> }
-    <Typography sx={{ py: '0.25rem' }}>{ item[0] }</Typography>
-    { expanded && <Stack>
-      <Stack direction="row" sx={{ py: '0.25rem' }}>
+  return <Stack spacing='1rem' onClick={(expanded) ? collapse : expand} sx={{ display: 'flex', alignItems: 'center', width: '100%', maxWidth: '100vw', background: 'lightgray', borderRadius: 2 }}>
+    { item[1] && <Typography sx={{ py: '0.1rem' }}>{ item[1]['Card Name'] }</Typography> }
+    <Typography sx={{ py: '0.1rem' }}>{ item[0] }</Typography>
+    { expanded && <Stack sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Stack direction="row" spacing='1rem' sx={{ py: '0.1rem' }}>
         <Typography>{ item[1]['Game'] }</Typography>
         <Typography>{ item[1]['Card Set'] }</Typography>
         <Typography>{ item[1]['Card Number'] }</Typography>
       </Stack>
-      <Typography variant="h4" sx={{ py: '0.25rem' }}>{ item[1]['Grade'] }</Typography>
+      <Typography variant="h4" sx={{ py: '0.1rem' }}>{ item[1]['Grade'] }</Typography>
     </Stack> }
   </Stack>
 };
 
 export const ScannedItemsList = ({ items }) => {
-  return <Stack sx={{ width: '100%' }}>
+  return <Stack spacing="1rem" sx={{ width: '100%' }}>
     { Array.from(items).map((item) => <ScannedItemRow key={item[0]} item={item}/>) }
   </Stack>;
 }
