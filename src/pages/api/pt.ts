@@ -4,6 +4,7 @@ import puppeteer from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
 import { NextApiRequest, NextApiResponse } from "next";
 import z from 'zod';
+import { isNumber } from "src/utils/basic/basic-numbers";
 
 const isUrl = z.string().url();
 
@@ -36,14 +37,22 @@ export default function getCodeData(req:NextApiRequest, res:NextApiResponse) {
 export async function parseCodeData(code: string) {
     isUrl.safeParse(code);
     const splitUrl = code.split('/');
-    const last = splitUrl.at(-1);
+    let cert = '';
     
-    if (last.length !== 10) throw new BasicError('invalid cert', 412);
+    for (let i = splitUrl.length - 1; i >= 0; i--) {
+        const str = splitUrl[i];
+        if (str.length === 10 && isNumber(str)) {
+            cert = str;
+            break;
+        }
+    }
 
-    return last;
+    if (!cert) throw new BasicError('failed to parse cert', 412);
+
+    return cert;
 }
 
-export async function getData(code: string) {
+export async function getData(cert: string) {
     const browser = await puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
@@ -51,7 +60,7 @@ export async function getData(code: string) {
         headless: chromium.headless,
     });
     const page = await browser.newPage();
-    const url = `https://www.cgccards.com/certlookup/${code}`;
+    const url = `https://www.cgccards.com/certlookup/${cert}`;
     const selector = 'dl';
 
     await page.goto(url);
