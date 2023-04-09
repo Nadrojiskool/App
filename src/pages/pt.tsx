@@ -61,9 +61,23 @@ export const ScannerDialog = ({ add, close }) => {
 }
 
 export const ScannedItemRow = ({ item }) => {
-return <Stack direction="row" spacing={5}>
-    <Typography>{ item[0] }</Typography>
-    { item[1] && <Typography>{ JSON.stringify(item[1]) }</Typography> }
+  const [expanded, setExpanded] = useState(false);
+  const [key, value] = item;
+
+  function expand() { if (value) setExpanded(true); }
+  function collapse() { setExpanded(false); }
+
+  return <Stack spacing='1rem' onClick={(expanded) ? collapse : expand} sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+    { value && <Typography sx={{ py: '0.25rem' }}>{ value['Card Name'] }</Typography> }
+    <Typography sx={{ py: '0.25rem' }}>{ key }</Typography>
+    { expanded && <Stack>
+      <Stack direction="row">
+        <Typography sx={{ py: '0.25rem' }}>{ value['Game'] }</Typography>
+        <Typography sx={{ py: '0.25rem' }}>{ value['Card Set'] }</Typography>
+        <Typography sx={{ py: '0.25rem' }}>{ value['Card Number'] }</Typography>
+      </Stack>
+      <Typography variant="h4" sx={{ py: '0.25rem' }}>{ value['Grade'] }</Typography>
+    </Stack> }
   </Stack>
 };
 

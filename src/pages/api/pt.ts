@@ -41,6 +41,7 @@ export async function parseCodeData(code: string) {
     
     for (let i = splitUrl.length - 1; i >= 0; i--) {
         const str = splitUrl[i];
+        console.log('string', str, isNumber(str))
         if (str.length === 10 && isNumber(str)) {
             cert = str;
             break;
