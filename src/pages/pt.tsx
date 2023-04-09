@@ -80,14 +80,16 @@ const Page = () => {
   function openScannerDialog() { setScannerOpen(true); }
   function closeScannerDialog() { setScannerOpen(false); }
 
-  async function getDetails(url:string) {
+  async function getDetails(code:string) {
+    if (scannedItems.has(code)) return;
+
     try {
-      scannedItems.set(url, undefined);
+      scannedItems.set(code, undefined);
       setScannedItems(new Map(scannedItems));
-      const { data: details } = await axios.get('/api/pt');
+      const { data: details } = await axios.post(`/api/pt`, { code });
 
       console.log('got details', details);
-      scannedItems.set(url, details);
+      scannedItems.set(code, details);
       setScannedItems(new Map(scannedItems));
     }
     catch (e) {

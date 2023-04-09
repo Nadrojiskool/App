@@ -1,11 +1,13 @@
-import { CustomError } from "src/types/error";
+import { BasicError, CustomError } from "src/types/error";
 import { parseBasicError } from "./validate";
 import puppeteer from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
+import { NextApiRequest, NextApiResponse } from "next";
+import z from 'zod';
 
+const isUrl = z.string().url();
 
-
-export default function getPuppeteerEndpoint(req:any, res:any) {
+export default function getCodeData(req:NextApiRequest, res:NextApiResponse) {
     return new Promise((resolve, reject)=>{
 		const errorHandling = (error:any)=>{
 			const e = parseBasicError(error);
@@ -14,10 +16,16 @@ export default function getPuppeteerEndpoint(req:any, res:any) {
 		}
 
         try {
-            getEndpoint()
-                .then((endpoint)=>{
-                    resolve(res.status(200).json(endpoint));
-                });
+            const { code } = req.body;
+
+            if (!code) throw new BasicError('No code provided', 412);
+
+            parseCodeData(code)
+                .then(getData)
+                .then((data)=>{
+                    resolve(res.status(200).json(data));
+                })
+                .catch(errorHandling);
         } catch(e:any) {
             errorHandling(e);
         }
@@ -25,7 +33,17 @@ export default function getPuppeteerEndpoint(req:any, res:any) {
     
 }
 
-export async function getEndpoint() {
+export async function parseCodeData(code: string) {
+    isUrl.safeParse(code);
+    const splitUrl = code.split('/');
+    const last = splitUrl.at(-1);
+    
+    if (last.length !== 10) throw new BasicError('invalid cert', 412);
+
+    return last;
+}
+
+export async function getData(code: string) {
     const browser = await puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
@@ -33,7 +51,7 @@ export async function getEndpoint() {
         headless: chromium.headless,
     });
     const page = await browser.newPage();
-    const url = 'https://www.cgccards.com/certlookup/3991441013/'
+    const url = `https://www.cgccards.com/certlookup/${code}`;
     const selector = 'dl';
 
     await page.goto(url);
