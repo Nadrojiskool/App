@@ -131,9 +131,3 @@ const Page = () => {
 };
 
 export default Page;
-
-export const config = {
-  api: {
-    responseLimit: '8mb',
-  },
-}
